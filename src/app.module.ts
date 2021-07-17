@@ -5,8 +5,9 @@ import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
-import { EmployersModule } from './entity-modules/employers/employers.module';
+import { UsersModule } from './entity-modules/users/users.module';
 import { gqlConf } from './config/global';
+import { AuthModule } from './utility-modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -15,7 +16,8 @@ import { gqlConf } from './config/global';
     GraphQLModule.forRoot({
       autoSchemaFile: join(process.cwd(), gqlConf.schemaFilePath),
     }),
-    EmployersModule,
+    UsersModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [],

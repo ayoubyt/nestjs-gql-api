@@ -4,15 +4,23 @@ import * as mongoose from 'mongoose';
 
 @ObjectType()
 @Schema()
-export class Employer {
+export class User {
   @Field(() => ID)
   _id : mongoose.Schema.Types.ObjectId;
   @Field()
   @Prop()
   firstName: string;
+  @Field()
+  @Prop()
+  lastName : string;
+  @Field()
+  @Prop()
+  email : string;
+  @Prop()
+  password: string;
 }
 
-export type EmployerDocument = Employer & mongoose.Document;
+export type UserDocument = User & mongoose.Document;
 
-export const EmployerSchema = SchemaFactory.createForClass(Employer);
+export const UserSchema = SchemaFactory.createForClass(User);
 
