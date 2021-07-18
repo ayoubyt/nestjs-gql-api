@@ -10,8 +10,6 @@ export const stringToEnumMiddleware = (
 ): FieldMiddleware => {
   return async (ctx: MiddlewareContext, next: NextFn) => {
     const value = await next();
-    let result = enumuration[value];
-    console.log({result});
-    return result;
+    return enumuration[value];
   };
 };
