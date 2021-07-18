@@ -1,6 +1,7 @@
 import { ObjectType, Field, Int, ID, registerEnumType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
+import { stringToEnumMiddleware } from 'src/helpers/gql';
 import { enumToArray } from 'src/helpers/utils';
 
 export enum UserRole {
@@ -11,7 +12,6 @@ export enum UserRole {
 registerEnumType(UserRole, {
   name: 'UserRole',
 });
-
 @ObjectType()
 @Schema()
 export class User {
@@ -31,7 +31,7 @@ export class User {
   email: string;
 
   @Prop({ type: String, enum: enumToArray(UserRole), default: 'USER' })
-  @Field(() => UserRole)
+  @Field(() => UserRole, { middleware: [stringToEnumMiddleware(UserRole)] })
   role: UserRole;
 
   @Prop({ required: true })

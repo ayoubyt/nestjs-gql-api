@@ -5,3 +5,4 @@ export const isAlphaString = (val: string) => /^[a-zA-Z]+$/.test(val);
 export function enumToArray(enumeration: { [key: string]: number | string }) {
   return Object.keys(enumeration).filter(isAlphaString);
 }
+
