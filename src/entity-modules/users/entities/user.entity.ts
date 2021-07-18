@@ -1,26 +1,46 @@
-import { ObjectType, Field, Int, ID } from '@nestjs/graphql';
+import { ObjectType, Field, Int, ID, registerEnumType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
+import { enumToArray } from 'src/helpers/utils';
+
+export enum UserRole {
+  ADMIN,
+  USER,
+}
+
+registerEnumType(UserRole, {
+  name: 'UserRole',
+});
 
 @ObjectType()
 @Schema()
 export class User {
   @Field(() => ID)
-  _id : mongoose.Schema.Types.ObjectId;
+  _id: mongoose.Schema.Types.ObjectId;
+
+  @Prop({ required: true })
   @Field()
-  @Prop()
   firstName: string;
+
+  @Prop({ required: true })
   @Field()
-  @Prop()
-  lastName : string;
+  lastName: string;
+
+  @Prop({ unique: true, required: true })
   @Field()
-  @Prop({unique: true})
-  email : string;
-  @Prop()
+  email: string;
+
+  @Prop({ type: String, enum: enumToArray(UserRole), default: 'USER' })
+  @Field(() => UserRole)
+  role: UserRole;
+
+  @Prop({ required: true })
   password: string;
+
+  @Prop([String])
+  accessTokens: string[];
 }
 
 export type UserDocument = User & mongoose.Document;
 
 export const UserSchema = SchemaFactory.createForClass(User);
-

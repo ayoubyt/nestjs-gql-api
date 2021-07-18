@@ -12,7 +12,9 @@ import { AuthModule } from './utility-modules/auth/auth.module';
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    MongooseModule.forRoot(process.env.MONGO_CONNECTION_STRING),
+    MongooseModule.forRoot(process.env.MONGO_CONNECTION_STRING, {
+      useCreateIndex: true,
+    }),
     GraphQLModule.forRoot({
       autoSchemaFile: join(process.cwd(), gqlConf.schemaFilePath),
     }),
