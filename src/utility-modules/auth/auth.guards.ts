@@ -1,4 +1,5 @@
-import { ExecutionContext, Injectable } from '@nestjs/common';
+import { ExecutionContext, Injectable, SetMetadata } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { AuthGuard } from '@nestjs/passport';
 
@@ -20,3 +21,18 @@ export class LocalAuthGuard extends AuthGuard('local') {
     return request;
   }
 }
+
+@Injectable()
+export class JwtAuthGuard extends AuthGuard('jwt') {
+  constructor(private reflector: Reflector) {
+    super();
+  }
+  getRequest(context: ExecutionContext) {
+    const gqlCtx = GqlExecutionContext.create(context);
+    const request: Request = gqlCtx.getContext().req;
+    return request;
+  }
+}
+
+export const IS_PUBLIC_KEY = 'isPublic';
+export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
