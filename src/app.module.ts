@@ -8,6 +8,7 @@ import { AppController } from './app.controller';
 import { UsersModule } from './entity-modules/users/users.module';
 import { gqlConf } from './config/global';
 import { AuthModule } from './utility-modules/auth/auth.module';
+import { EmployeesModule } from './entity-modules/employees/employees.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { AuthModule } from './utility-modules/auth/auth.module';
       autoSchemaFile: join(process.cwd(), gqlConf.schemaFilePath),
     }),
     UsersModule,
+    EmployeesModule,
     AuthModule,
   ],
   controllers: [AppController],
