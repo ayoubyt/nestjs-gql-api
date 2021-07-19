@@ -16,7 +16,7 @@ registerEnumType(UserRole, {
 @Schema()
 export class User {
   @Field(() => ID)
-  _id: mongoose.Schema.Types.ObjectId;
+  id: mongoose.Schema.Types.ObjectId;
 
   @Prop({ required: true })
   @Field()

@@ -1,8 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserInput } from 'src/entity-modules/users/dto/user.inputs';
+import {
+  User,
+  UserDocument,
+} from 'src/entity-modules/users/entities/user.entity';
 import { UsersService } from 'src/entity-modules/users/users.service';
-import { verifyHashMatch } from 'src/helpers/crypto';
+import { hashText, verifyHashMatch } from 'src/helpers/crypto';
 import { AuthResult } from './dto/auth-result.obj';
 
 @Injectable()
@@ -12,15 +16,8 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async validateUser(email: string, pass: string): Promise<any> {
-    const user = await this.usersService.findOneByEmail(email);
-    if (user && (await verifyHashMatch(pass, user.password))) return user;
-    return null;
-  }
-
-  async register(data: CreateUserInput): Promise<AuthResult> {
-    let user = await this.usersService.create(data);
-    let accessToken = await this.jwtService.sign(
+  private _issueAccessToken(user: User) {
+    let accessToken = this.jwtService.sign(
       {
         sub: user.id,
         uid: user.id,
@@ -28,8 +25,28 @@ export class AuthService {
       },
       { secret: process.env.ACCESS_TOKEN_SECRET },
     );
+    return accessToken;
+  }
+
+  async validateUser(email: string, pass: string): Promise<any> {
+    const user = await this.usersService.findOneByEmail(email);
+    if (user && (await verifyHashMatch(pass, user.password))) return user;
+    return null;
+  }
+
+  async register(data: CreateUserInput): Promise<AuthResult> {
+    let password = await hashText(data.password);
+    let user = await this.usersService.create({ ...data, password });
+    let accessToken = this._issueAccessToken(user);
     user.accessTokens.push(accessToken);
-    let result = await user.save();
-    return { user: result, accessToken };
+    let updatedUser = await user.save();
+    return { user: updatedUser, accessToken };
+  }
+
+  async login(user: UserDocument) {
+    let accessToken = this._issueAccessToken(user);
+    user.accessTokens.push(accessToken);
+    let updatedUser = await user.save();
+    return { user: updatedUser, accessToken };
   }
 }
