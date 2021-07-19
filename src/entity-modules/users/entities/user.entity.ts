@@ -38,7 +38,7 @@ export class User {
   password: string;
 
   @Prop([String])
-  accessTokens: string[];
+  accessTokens: mongoose.Types.Array<string>;
 }
 
 export type UserDocument = User & mongoose.Document;

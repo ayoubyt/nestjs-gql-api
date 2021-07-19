@@ -8,6 +8,7 @@ import {
 import { UsersService } from 'src/entity-modules/users/users.service';
 import { hashText, verifyHashMatch } from 'src/helpers/crypto';
 import { AuthResult } from './dto/auth-result.obj';
+import * as mongoose from 'mongoose';
 
 @Injectable()
 export class AuthService {
@@ -48,5 +49,15 @@ export class AuthService {
     user.accessTokens.push(accessToken);
     let updatedUser = await user.save();
     return { user: updatedUser, accessToken };
+  }
+
+  async logout(user: UserDocument, token: string) {
+    user.accessTokens.pull(token);
+    await user.save();
+  }
+
+  async logoutAllDevices(user: UserDocument) {
+    user.accessTokens = new mongoose.Types.Array();
+    await user.save();
   }
 }

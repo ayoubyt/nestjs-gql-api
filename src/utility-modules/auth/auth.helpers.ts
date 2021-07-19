@@ -11,3 +11,14 @@ export const CurrentUser = createParamDecorator(
     return ctx.getContext().req.user;
   },
 );
+
+
+
+export const CurrentUserToken = createParamDecorator(
+  (data: unknown, context: ExecutionContext) => {
+    const ctx = GqlExecutionContext.create(context);
+    const request = ctx.getContext().req;
+    const [, token] = request.headers.authorization.split(/\s+/);
+    return token;
+  },
+);

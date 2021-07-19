@@ -1,4 +1,4 @@
-import { FieldMiddleware, MiddlewareContext, NextFn } from '@nestjs/graphql';
+import { Field, FieldMiddleware, MiddlewareContext, NextFn, ObjectType } from '@nestjs/graphql';
 
 /** generates a gql field middlware that transforms
  * the returning values returned from mongoose for example
@@ -13,3 +13,10 @@ export const stringToEnumMiddleware = (
     return enumuration[value];
   };
 };
+
+@ObjectType()
+export class Message
+{
+  @Field()
+  message : string;
+}

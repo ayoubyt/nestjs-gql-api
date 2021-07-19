@@ -4,6 +4,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ExtractJwt, Strategy as Jwt } from 'passport-jwt';
 import { UsersService } from 'src/entity-modules/users/users.service';
+import { Request } from 'express';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Local) {
@@ -26,12 +27,14 @@ export class JwtStrategy extends PassportStrategy(Jwt) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       secretOrKey: process.env.ACCESS_TOKEN_SECRET,
+      passReqToCallback: true,
     });
   }
 
-  async validate(payload: any) {
+  async validate(req: Request, payload: any) {
     const user = await this.usersService.findOneById(payload.uid);
-    if (!user) {
+    const [, token] = req.headers.authorization.split(/\s+/);
+    if (!user || !(user.accessTokens.includes(token))) {
       throw new UnauthorizedException();
     }
     return user;
