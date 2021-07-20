@@ -7,6 +7,8 @@ import {
 } from './dto/employee.inputs';
 import { Employee, EmployeeDocument } from './entities/employee.entity';
 import * as mongoose from 'mongoose';
+import { PaginationInput } from 'src/utils/gql';
+import { UserDocument, UserRole } from '../users/entities/user.entity';
 
 const { ObjectId } = mongoose.Schema.Types;
 
@@ -17,8 +19,20 @@ export class EmployeesService {
     private readonly employeeModel: Model<EmployeeDocument>,
   ) {}
 
-  async findAll() {
-    let employees = await this.employeeModel.find();
+  async findAll(user: UserDocument, pagination?: PaginationInput) {
+    let query : mongoose.FilterQuery<EmployeeDocument> = {};
+      /**
+       * if user is admin, return all employees, else return only user
+       * own employees
+       */
+    if (user.role === UserRole.USER)
+      query.employerId = user.id;
+
+    let employees = await this.employeeModel
+      .find(query)
+      .skip(pagination?.offset)
+      .limit(pagination?.limit);
+
     return employees;
   }
 
@@ -37,12 +51,10 @@ export class EmployeesService {
     return await employee.save();
   }
 
-  async deleteOne(employeeId: string)
-  {
+  async deleteOne(employeeId: string) {
     let employee = await this.employeeModel.findById(employeeId);
     if (!employee)
       throw new NotFoundException(`employee with id '${employeeId}' not found`);
     return await employee.remove();
-
   }
 }

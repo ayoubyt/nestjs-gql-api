@@ -1,4 +1,5 @@
 import {
+  ArgsType,
   Field,
   FieldMiddleware,
   InputType,
@@ -29,14 +30,26 @@ export class Message {
   message: string;
 }
 
+const DEFUALT_PAGE_LIMIT = 10;
 @InputType()
 export class PaginationInput {
   @Min(0)
   @Field(() => Int, {
+    nullable: true,
     description: 'the steps number of steps to move cusor forward',
   })
-  offset: number;
+  offset?: number;
+
   @Min(0)
-  @Field(() => Int, { description: 'number of elements to return' })
-  limit: number;
+  @Field(() => Int, {
+    nullable: true,
+    description: 'number of elements to return',
+  })
+  limit?: number = DEFUALT_PAGE_LIMIT;
+}
+
+@ArgsType()
+export class PaginationArgs {
+  @Field({ nullable: true })
+  paginationInput: PaginationInput = { limit: DEFUALT_PAGE_LIMIT };
 }
