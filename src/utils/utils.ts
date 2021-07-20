@@ -6,3 +6,4 @@ export function enumToArray(enumeration: { [key: string]: number | string }) {
   return Object.keys(enumeration).filter(isAlphaString);
 }
 
+export const range = n => [...Array(n).keys()]

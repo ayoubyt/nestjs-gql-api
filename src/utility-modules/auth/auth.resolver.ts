@@ -2,7 +2,7 @@ import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { CreateUserInput } from 'src/entity-modules/users/dto/user.inputs';
 import { UserDocument } from 'src/entity-modules/users/entities/user.entity';
-import { Message } from 'src/helpers/gql';
+import { Message } from 'src/utils/gql';
 import { JwtAuthGuard, LocalAuthGuard } from './auth.guards';
 import { CurrentUser, CurrentUserToken } from './auth.helpers';
 import { AuthService } from './auth.service';

@@ -29,12 +29,4 @@ export class UsersService {
     let user = new this.userModel(createEmployerInput);
     return await user.save();
   }
-
-  // update(id: number, updateEmployerInput: UpdateEmployerInput) {
-  //   return `This action updates a #${id} employer`;
-  // }
-
-  // remove(id: number) {
-  //   return `This action removes a #${id} employer`;
-  // }
 }

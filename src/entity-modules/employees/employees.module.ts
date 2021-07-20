@@ -11,5 +11,6 @@ import { Employee, EmployeeSchema } from './entities/employee.entity';
     ]),
   ],
   providers: [EmployeesResolver, EmployeesService],
+  exports: [MongooseModule]
 })
 export class EmployeesModule {}

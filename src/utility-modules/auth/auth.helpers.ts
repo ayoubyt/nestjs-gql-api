@@ -12,8 +12,6 @@ export const CurrentUser = createParamDecorator(
   },
 );
 
-
-
 export const CurrentUserToken = createParamDecorator(
   (data: unknown, context: ExecutionContext) => {
     const ctx = GqlExecutionContext.create(context);

@@ -4,7 +4,7 @@ import { User } from '../entities/user.entity';
 @InputType()
 export class CreateUserInput extends OmitType(
   User,
-  ['id', 'role'],
+  ['id', 'role', "accessTokens"],
   InputType,
 ) {
     @Field()

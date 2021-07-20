@@ -6,7 +6,7 @@ import {
   UserDocument,
 } from 'src/entity-modules/users/entities/user.entity';
 import { UsersService } from 'src/entity-modules/users/users.service';
-import { hashText, verifyHashMatch } from 'src/helpers/crypto';
+import { hashText, verifyHashMatch } from 'src/utils/crypto';
 import { AuthResult } from './dto/auth-result.obj';
 import * as mongoose from 'mongoose';
 

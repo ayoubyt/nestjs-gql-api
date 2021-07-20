@@ -1,13 +1,14 @@
 import { ObjectType, Field, Int, ID, registerEnumType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
-import { stringToEnumMiddleware } from 'src/helpers/gql';
-import { enumToArray } from 'src/helpers/utils';
+import { stringToEnumMiddleware } from 'src/utils/gql';
+import { enumToArray } from 'src/utils/utils';
 
 export enum UserRole {
-  ADMIN,
-  USER,
+  ADMIN = "ADMIN",
+  USER = "USER",
 }
+
 
 registerEnumType(UserRole, {
   name: 'UserRole',
