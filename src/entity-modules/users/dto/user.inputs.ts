@@ -4,12 +4,16 @@ import { User } from '../entities/user.entity';
 @InputType()
 export class CreateUserInput extends OmitType(
   User,
-  ['id', 'role', "accessTokens"],
+  ['id', 'role', 'accessTokens'],
   InputType,
 ) {
-    @Field()
-    password: string;
+  @Field()
+  password: string;
 }
 
 @InputType()
-export class UpdateProfileInput extends PartialType(CreateUserInput) {}
+export class UpdateUserInput extends PartialType(
+  OmitType(CreateUserInput, ['password']),
+) {
+
+}

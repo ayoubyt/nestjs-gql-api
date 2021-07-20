@@ -22,8 +22,8 @@ export class EmployeesService {
   async findAll(user: UserDocument, pagination?: PaginationInput) {
     let query : mongoose.FilterQuery<EmployeeDocument> = {};
       /**
-       * if user is admin, return all employees, else return only user
-       * own employees
+       * if user is admin, return all employees, else return only
+       * the user own employees
        */
     if (user.role === UserRole.USER)
       query.employerId = user.id;
