@@ -17,16 +17,24 @@ export class EmployeesService {
   constructor(
     @InjectModel(Employee.name)
     private readonly employeeModel: Model<EmployeeDocument>,
-  ) {}
+  ) {
+
+  }
+
+  async findOne(employeeId: string) {
+    let employee = await this.employeeModel.findById(employeeId);
+    if (!employee)
+      throw new NotFoundException(`employee with id '${employeeId}' not found`);
+    return employee;
+  }
 
   async findAll(user: UserDocument, pagination?: PaginationInput) {
-    let query : mongoose.FilterQuery<EmployeeDocument> = {};
-      /**
-       * if user is admin, return all employees, else return only
-       * the user own employees
-       */
-    if (user.role === UserRole.USER)
-      query.employerId = user.id;
+    let query: mongoose.FilterQuery<EmployeeDocument> = {};
+    /**
+     * if user is admin, return all employees, else return only
+     * the user own employees
+     */
+    if (user.role === UserRole.USER) query.employerId = user.id;
 
     let employees = await this.employeeModel
       .find(query)
