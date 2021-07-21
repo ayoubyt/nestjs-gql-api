@@ -9,6 +9,7 @@ import { UsersService } from 'src/entity-modules/users/users.service';
 import { hashText, verifyHashMatch } from 'src/utils/crypto';
 import { AuthResult } from './dto/auth-result.obj';
 import * as mongoose from 'mongoose';
+import { auth } from 'src/config/config';
 
 @Injectable()
 export class AuthService {
@@ -24,7 +25,10 @@ export class AuthService {
         uid: user.id,
         role: user.role,
       },
-      { secret: process.env.ACCESS_TOKEN_SECRET },
+      {
+        secret: process.env.ACCESS_TOKEN_SECRET,
+        expiresIn: auth.accessTokenDuration,
+      },
     );
     return accessToken;
   }

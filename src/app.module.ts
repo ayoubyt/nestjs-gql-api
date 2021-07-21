@@ -6,7 +6,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { UsersModule } from './entity-modules/users/users.module';
-import { gqlConf } from './config/global';
+import { gqlConf } from './config/config';
 import { AuthModule } from './utility-modules/auth/auth.module';
 import { EmployeesModule } from './entity-modules/employees/employees.module';
 import { SeedCommands } from './utils/commands/seed.commands';

@@ -10,6 +10,7 @@ import {
 import { JwtAuthGuard } from 'src/utility-modules/auth/auth.guards';
 import { CurrentUser } from 'src/utility-modules/auth/auth.helpers';
 import { PaginationArgs } from 'src/utils/gql';
+import { CheckObjectId } from 'src/utils/mogo';
 import { User, UserDocument } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
 import {
@@ -28,7 +29,7 @@ export class EmployeesResolver {
   ) {}
 
   @Query(() => Employee, { description: 'find one employee by id' })
-  employee(@Args('employeeId') employeeId: string) {
+  employee(@Args('employeeId', CheckObjectId) employeeId: string) {
     return this.employeesService.findOne(employeeId);
   }
 

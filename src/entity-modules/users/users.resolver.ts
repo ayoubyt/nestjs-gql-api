@@ -7,11 +7,24 @@ import { JwtAuthGuard } from 'src/utility-modules/auth/auth.guards';
 import { Role, RolesGuard } from 'src/utils/authorization';
 import { CurrentUser } from 'src/utility-modules/auth/auth.helpers';
 import { PaginationArgs } from 'src/utils/gql';
+import { CheckObjectId } from 'src/utils/mogo';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Resolver(() => User)
 export class UsersResolver {
   constructor(private readonly usersService: UsersService) {}
+  @Query(() => User, {
+    description: 'returns user (request sender) own personal data',
+  })
+  me(@CurrentUser() user: UserDocument) {
+    return user;
+  }
+
+  @Query(() => User)
+  user (@Args("userId", CheckObjectId) id : string){
+    return this.usersService.findOneById(id);
+  }
+
 
   @Role(UserRole.ADMIN)
   @Query(() => [User], {
@@ -24,10 +37,6 @@ export class UsersResolver {
     return this.usersService.findAll(paginationArgs.paginationInput);
   }
 
-  @Query(() => User)
-  me(@CurrentUser() user: UserDocument) {
-    return user;
-  }
 
   @Role(UserRole.ADMIN)
   @Mutation(() => User, {
