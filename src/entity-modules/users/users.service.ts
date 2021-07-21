@@ -5,6 +5,11 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { PaginationArgs, PaginationInput } from 'src/utils/gql';
+import {
+  Employee,
+  EmployeeDocument,
+} from '../employees/entities/employee.entity';
 import { CreateUserInput, UpdateUserInput } from './dto/user.inputs';
 import { User, UserDocument, UserRole } from './entities/user.entity';
 
@@ -13,10 +18,16 @@ export class UsersService {
   constructor(
     @InjectModel(User.name)
     private readonly userModel: Model<UserDocument>,
+    @InjectModel(Employee.name)
+    private readonly employeeModel: Model<EmployeeDocument>,
   ) {}
 
-  async findAll() {
-    return await this.userModel.find().lean();
+  async findAll(pagination?: PaginationInput) {
+    return await this.userModel
+      .find()
+      .skip(pagination?.offset)
+      .limit(pagination?.limit)
+      .lean();
   }
 
   async findOneById(id: string) {
@@ -49,9 +60,26 @@ export class UsersService {
       if (!other)
         throw new NotFoundException(`user with id '${userId}' not found`);
       if (other.role === UserRole.ADMIN)
-        throw new ForbiddenException(``);
+        throw new ForbiddenException(`an admin can not edit other admin`);
       other.set(data);
       return other.save();
+    }
+  }
+
+  async deleteOne(userId: string, currentUser: UserDocument) {
+    if (currentUser.id === userId) {
+      await this.employeeModel.deleteMany({ employerId: currentUser.id });
+      return await currentUser.remove();
+    } else {
+      if (currentUser.role !== UserRole.ADMIN)
+        throw new ForbiddenException(`only admin can delete others users`);
+      let other = await this.userModel.findById(userId);
+      if (!other)
+        throw new NotFoundException(`user with id '${userId}' not found`);
+      if (other.role === UserRole.ADMIN)
+        throw new ForbiddenException(`an admin can not delete other admin`);
+      await this.employeeModel.deleteMany({ employerId: other.id });
+      return await other.remove();
     }
   }
 }

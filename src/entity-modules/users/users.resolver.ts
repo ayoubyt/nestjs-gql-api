@@ -6,9 +6,9 @@ import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/utility-modules/auth/auth.guards';
 import { Role, RolesGuard } from 'src/utils/authorization';
 import { CurrentUser } from 'src/utility-modules/auth/auth.helpers';
+import { PaginationArgs } from 'src/utils/gql';
 
-@UseGuards(JwtAuthGuard)
-@UseGuards(RolesGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Resolver(() => User)
 export class UsersResolver {
   constructor(private readonly usersService: UsersService) {}
@@ -17,8 +17,11 @@ export class UsersResolver {
   @Query(() => [User], {
     description: 'only admin user can read data about other users',
   })
-  users() {
-    return this.usersService.findAll();
+  users(
+    @Args()
+    paginationArgs: PaginationArgs,
+  ) {
+    return this.usersService.findAll(paginationArgs.paginationInput);
   }
 
   @Query(() => User)
@@ -26,6 +29,7 @@ export class UsersResolver {
     return user;
   }
 
+  @Role(UserRole.ADMIN)
   @Mutation(() => User, {
     description:
       'only admin can update other users data and normal user can only update his profile',
@@ -38,11 +42,32 @@ export class UsersResolver {
     return this.usersService.updateOne(userId, data, user);
   }
 
-  @Mutation(() => User)
+  @Role(UserRole.ADMIN)
+  @Mutation(() => User, {
+    description:
+      'only admin can delete other users and normal users can only delete there profile',
+  })
+  deleteUser(
+    @CurrentUser() user: UserDocument,
+    @Args('userId') userId: string,
+  ) {
+    return this.usersService.deleteOne(userId, user);
+  }
+
+  @Mutation(() => User, {
+    description: 'a mutation for user to update its own profile',
+  })
   updateProfile(
     @CurrentUser() user: UserDocument,
     @Args('uspdateUserInput') data: UpdateUserInput,
   ) {
     return this.usersService.updateOne(user.id, data, user);
+  }
+
+  @Mutation(() => User, {
+    description: 'a mutation for user to delete its own profile',
+  })
+  deleteProfile(@CurrentUser() user: UserDocument) {
+    return this.usersService.deleteOne(user.id, user);
   }
 }

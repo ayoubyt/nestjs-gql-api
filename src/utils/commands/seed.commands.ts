@@ -16,7 +16,6 @@ import * as faker from 'faker';
 import { hashText } from '../crypto';
 import { range } from '../utils';
 import * as mongoose from 'mongoose';
-import console from 'console';
 
 @Injectable()
 export class SeedCommands {

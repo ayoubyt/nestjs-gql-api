@@ -31,25 +31,32 @@ export class Message {
 }
 
 const DEFUALT_PAGE_LIMIT = 10;
+const DEFUALT_PAGE_OFFSET = 0;
 @InputType()
 export class PaginationInput {
   @Min(0)
   @Field(() => Int, {
     nullable: true,
-    description: 'the steps number of steps to move cusor forward',
+    description: 'the number of steps to move the read cusor forward',
   })
-  offset?: number;
+  offset?: number = DEFUALT_PAGE_OFFSET;
 
   @Min(0)
   @Field(() => Int, {
     nullable: true,
-    description: 'number of elements to return',
+    description: 'number of elements to to fetch',
   })
   limit?: number = DEFUALT_PAGE_LIMIT;
 }
 
 @ArgsType()
 export class PaginationArgs {
-  @Field({ nullable: true })
-  paginationInput: PaginationInput = { limit: DEFUALT_PAGE_LIMIT };
+  @Field({
+    nullable: true,
+    defaultValue: {
+      limit: DEFUALT_PAGE_LIMIT,
+      offset: DEFUALT_PAGE_OFFSET,
+    },
+  })
+  paginationInput: PaginationInput;
 }

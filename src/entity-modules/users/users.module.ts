@@ -3,12 +3,14 @@ import { UsersService } from './users.service';
 import { UsersResolver } from './users.resolver';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from './entities/user.entity';
+import { EmployeesModule } from '../employees/employees.module';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: User.name, schema: UserSchema },
     ]),
+    EmployeesModule
   ],
   providers: [UsersResolver, UsersService],
   exports: [UsersService, MongooseModule]
