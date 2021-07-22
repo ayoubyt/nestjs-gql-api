@@ -10,12 +10,11 @@ import {
   UserDocument,
 } from 'src/entity-modules/users/entities/user.entity';
 import { Command, Positional, Option } from 'nestjs-command';
-import { CreateUserInput } from 'src/entity-modules/users/dto/user.inputs';
-import { CreateEmployeeInput } from 'src/entity-modules/employees/dto/employee.inputs';
 import * as faker from 'faker';
 import { hashText } from '../crypto';
 import { range } from '../utils';
 import * as mongoose from 'mongoose';
+import { initAdmin } from "../../config/config";
 
 @Injectable()
 export class SeedCommands {
@@ -62,15 +61,26 @@ export class SeedCommands {
     command: 'seed:delete-employers-and-employees',
     aliases: 'seed:clear',
     autoExit: false,
-    describe: 'deletes users and employees conllections',
+    describe: 'deletes users and employees collections',
   })
   async deleteEmployerAndEmployees() {
     await this.employeeModel.collection.drop();
     await this.userModel.collection.drop();
     process.stdout.write(
-      `${this.userModel.collection.name} and ${this.employeeModel.collection.name} conllections deleted\n`,
+      `${this.userModel.collection.name} and ${this.employeeModel.collection.name} collections deleted\n`,
     );
     process.exit(0);
+  }
+
+  @Command({
+    command: 'seed:admin',
+  })
+  async addAdmin() {
+    let password = await hashText(initAdmin.password)
+    let admin = new this.userModel({...initAdmin, password});
+    let data = await admin.save();
+    console.log("init admin created success fully");
+    console.log(data.toObject());
   }
 
   private async _randomEmployer() {

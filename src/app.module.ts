@@ -11,6 +11,7 @@ import { AuthModule } from './utility-modules/auth/auth.module';
 import { EmployeesModule } from './entity-modules/employees/employees.module';
 import { SeedCommands } from './utils/commands/seed.commands';
 import { CommandModule } from 'nestjs-command';
+import { gql } from './utils/utils';
 
 @Module({
   imports: [

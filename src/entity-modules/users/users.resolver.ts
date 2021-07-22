@@ -21,10 +21,9 @@ export class UsersResolver {
   }
 
   @Query(() => User)
-  user (@Args("userId", CheckObjectId) id : string){
+  user(@Args('userId', CheckObjectId) id: string) {
     return this.usersService.findOneById(id);
   }
-
 
   @Role(UserRole.ADMIN)
   @Query(() => [User], {
@@ -36,7 +35,6 @@ export class UsersResolver {
   ) {
     return this.usersService.findAll(paginationArgs.paginationInput);
   }
-
 
   @Role(UserRole.ADMIN)
   @Mutation(() => User, {
