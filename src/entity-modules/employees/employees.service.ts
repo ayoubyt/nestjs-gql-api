@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import {
   CreateEmployeeInput,
+  MatchEmployyesInput,
   UpdateEmployeeInput,
 } from './dto/employee.inputs';
 import { Employee, EmployeeDocument } from './entities/employee.entity';
@@ -17,9 +18,7 @@ export class EmployeesService {
   constructor(
     @InjectModel(Employee.name)
     private readonly employeeModel: Model<EmployeeDocument>,
-  ) {
-
-  }
+  ) {}
 
   async findOne(employeeId: string) {
     let employee = await this.employeeModel.findById(employeeId);
@@ -28,16 +27,26 @@ export class EmployeesService {
     return employee;
   }
 
-  async findAll(user: UserDocument, pagination?: PaginationInput) {
-    let query: mongoose.FilterQuery<EmployeeDocument> = {};
+  async findAll(
+    user: UserDocument,
+    pagination?: PaginationInput,
+    match?: MatchEmployyesInput,
+  ) {
+    let q: mongoose.FilterQuery<EmployeeDocument> = {};
+
+    if (match)
+      Object.entries(match).forEach(([key, val]) => {
+        q[key] = { $regex: val, $options: 'i' };
+      });
+
     /**
      * if user is admin, return all employees, else return only
      * the user own employees
      */
-    if (user.role === UserRole.USER) query.employerId = user.id;
+    if (user.role === UserRole.USER) q.employerId = user.id;
 
     let employees = await this.employeeModel
-      .find(query)
+      .find(q)
       .skip(pagination?.offset)
       .limit(pagination?.limit);
 

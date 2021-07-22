@@ -14,7 +14,7 @@ import * as faker from 'faker';
 import { hashText } from '../crypto';
 import { range } from '../utils';
 import * as mongoose from 'mongoose';
-import { initAdmin } from "../../config/config";
+import { initAdmin } from '../../config/config';
 
 @Injectable()
 export class SeedCommands {
@@ -37,9 +37,8 @@ export class SeedCommands {
   })
   async seedEmployerAndEmployees() {
     let employers = await Promise.all(
-      range(SeedCommands._numEmployers).map(() => this._randomEmployer()),
+      range(SeedCommands._numEmployers).map((i) => this._randomEmployer(i)),
     );
-    process.stdout.write(`${employers.length}\n`);
     await Promise.all(
       employers.map(async (e) => {
         let employer = new this.userModel(e);
@@ -52,6 +51,11 @@ export class SeedCommands {
         );
         process.stdout.write('.'.repeat(SeedCommands._numEmployeesPerEmployer));
       }),
+    );
+    console.log(
+      `${SeedCommands._numEmployers} employers and ${
+        SeedCommands._numEmployeesPerEmployer * SeedCommands._numEmployers
+      } employees created`,
     );
     process.stdout.write('\ndone !\n');
     process.exit(0);
@@ -76,17 +80,17 @@ export class SeedCommands {
     command: 'seed:admin',
   })
   async addAdmin() {
-    let password = await hashText(initAdmin.password)
-    let admin = new this.userModel({...initAdmin, password});
+    let password = await hashText(initAdmin.password);
+    let admin = new this.userModel({ ...initAdmin, password });
     let data = await admin.save();
-    console.log("init admin created success fully");
+    console.log('init admin created success fully');
     console.log(data.toObject());
   }
 
-  private async _randomEmployer() {
+  private async _randomEmployer(i: number) {
     let firstName = faker.name.firstName();
     let lastName = faker.name.lastName();
-    let email = faker.internet.email(firstName, lastName);
+    let email = faker.internet.email(firstName + i, lastName);
     let password = await hashText(SeedCommands._defaultPassword);
     return { firstName, lastName, email, password };
   }

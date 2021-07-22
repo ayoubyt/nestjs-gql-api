@@ -13,6 +13,7 @@ import { PaginationArgs } from 'src/utils/gql';
 import { CheckObjectId } from 'src/utils/mogo';
 import { User, UserDocument } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
+import { QueryEmployeesArgs } from './dto/employee.args';
 import {
   CreateEmployeeInput,
   UpdateEmployeeInput,
@@ -35,12 +36,15 @@ export class EmployeesResolver {
 
   @Query(() => [Employee])
   employees(
-    @Args()
-    paginationArgs: PaginationArgs,
+    @Args() data: QueryEmployeesArgs,
     @CurrentUser()
     user: UserDocument,
   ) {
-    return this.employeesService.findAll(user, paginationArgs.paginationInput);
+    return this.employeesService.findAll(
+      user,
+      data.paginationInput,
+      data.matchInput,
+    );
   }
 
   @ResolveField(() => User)
