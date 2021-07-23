@@ -1,5 +1,5 @@
 import { UseGuards } from '@nestjs/common';
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CreateUserInput } from 'src/entity-modules/users/dto/user.inputs';
 import { UserDocument } from 'src/entity-modules/users/entities/user.entity';
 import { Message } from 'src/utils/gql';
@@ -12,6 +12,12 @@ import { LoginUserInput } from './dto/login.input';
 @Resolver(() => AuthResult)
 export class AuthResolver {
   constructor(private readonly authService: AuthService) {}
+
+  @Query(() => String)
+  test()
+  {
+    return "done";
+  }
 
   @Mutation(() => AuthResult)
   register(@Args('createUserInput') data: CreateUserInput) {

@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import faker from 'faker';
 import { Model } from 'mongoose';
+import { initAdmin } from 'src/config/config';
 import {
   Employee,
   EmployeeDocument,
@@ -9,15 +11,11 @@ import {
   User,
   UserDocument,
 } from 'src/entity-modules/users/entities/user.entity';
-import { Command, Positional, Option } from 'nestjs-command';
-import * as faker from 'faker';
-import { hashText } from '../crypto';
-import { range } from '../utils';
-import * as mongoose from 'mongoose';
-import { initAdmin } from '../../config/config';
+import { hashText } from 'src/utils/crypto';
+import { range } from 'src/utils/utils';
 
 @Injectable()
-export class SeedCommands {
+export class SeederService {
   private static _numEmployers = 10;
   private static _numEmployeesPerEmployer = 100;
   private static _defaultPassword = '123456789';
@@ -29,15 +27,14 @@ export class SeedCommands {
     private readonly employeeModel: Model<EmployeeDocument>,
   ) {}
 
-  @Command({
-    command: 'seed:employers-and-employees',
-    aliases: 'seed',
-    autoExit: false,
-    describe: 'seeds users and employees conllections with random data',
-  })
-  async seedEmployerAndEmployees() {
+  seed()
+  {
+
+  }
+
+  private async _seedEmployerAndEmployees() {
     let employers = await Promise.all(
-      range(SeedCommands._numEmployers).map((i) => this._randomEmployer(i)),
+      range(SeederService._numEmployers).map((i) => this._randomEmployer(i)),
     );
     await Promise.all(
       employers.map(async (e) => {
@@ -45,29 +42,25 @@ export class SeedCommands {
         await employer.save();
         process.stdout.write('*');
         await this.employeeModel.insertMany(
-          range(SeedCommands._numEmployeesPerEmployer).map(() => {
+          range(SeederService._numEmployeesPerEmployer).map(() => {
             return this._randomEmployee(employer.id);
           }),
         );
-        process.stdout.write('.'.repeat(SeedCommands._numEmployeesPerEmployer));
+        process.stdout.write(
+          '.'.repeat(SeederService._numEmployeesPerEmployer),
+        );
       }),
     );
     console.log(
-      `${SeedCommands._numEmployers} employers and ${
-        SeedCommands._numEmployeesPerEmployer * SeedCommands._numEmployers
+      `${SeederService._numEmployers} employers and ${
+        SeederService._numEmployeesPerEmployer * SeederService._numEmployers
       } employees created`,
     );
     process.stdout.write('\ndone !\n');
     process.exit(0);
   }
 
-  @Command({
-    command: 'seed:delete-employers-and-employees',
-    aliases: 'seed:clear',
-    autoExit: false,
-    describe: 'deletes users and employees collections',
-  })
-  async deleteEmployerAndEmployees() {
+  private async _deleteEmployerAndEmployees() {
     await this.employeeModel.collection.drop();
     await this.userModel.collection.drop();
     process.stdout.write(
@@ -76,10 +69,7 @@ export class SeedCommands {
     process.exit(0);
   }
 
-  @Command({
-    command: 'seed:admin',
-  })
-  async addAdmin() {
+  private async _addAdmin() {
     let password = await hashText(initAdmin.password);
     let admin = new this.userModel({ ...initAdmin, password });
     let data = await admin.save();
@@ -91,11 +81,11 @@ export class SeedCommands {
     let firstName = faker.name.firstName();
     let lastName = faker.name.lastName();
     let email = faker.internet.email(firstName + i, lastName);
-    let password = await hashText(SeedCommands._defaultPassword);
+    let password = await hashText(SeederService._defaultPassword);
     return { firstName, lastName, email, password };
   }
 
-  private _randomEmployee(employerId: mongoose.Schema.Types.ObjectId) {
+  private _randomEmployee(employerId: string) {
     let firstName = faker.name.firstName();
     let lastName = faker.name.lastName();
     let email = faker.internet.email(firstName, lastName);

@@ -2,7 +2,7 @@ import { ObjectType, Field, Int, ID, registerEnumType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { IsEmail, IsNotEmpty } from 'class-validator';
 import * as mongoose from 'mongoose';
-import { User } from 'src/entity-modules/users/entities/user.entity';
+import { User } from "../../users/entities/user.entity";
 
 @Schema()
 @ObjectType()

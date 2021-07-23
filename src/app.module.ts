@@ -9,9 +9,7 @@ import { UsersModule } from './entity-modules/users/users.module';
 import { gqlConf } from './config/config';
 import { AuthModule } from './utility-modules/auth/auth.module';
 import { EmployeesModule } from './entity-modules/employees/employees.module';
-import { SeedCommands } from './utils/commands/seed.commands';
-import { CommandModule } from 'nestjs-command';
-import { gql } from './utils/utils';
+import { SeederModule } from './utility-modules/seeder/seeder.module';
 
 @Module({
   imports: [
@@ -22,12 +20,11 @@ import { gql } from './utils/utils';
     GraphQLModule.forRoot({
       autoSchemaFile: join(process.cwd(), gqlConf.schemaFilePath),
     }),
-    CommandModule,
     UsersModule,
     EmployeesModule,
     AuthModule,
+    // SeederModule,
   ],
   controllers: [AppController],
-  providers: [SeedCommands],
 })
 export class AppModule {}
