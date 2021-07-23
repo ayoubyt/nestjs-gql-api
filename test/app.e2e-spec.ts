@@ -6,7 +6,6 @@ import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { join } from 'path';
 import { gqlConf } from 'src/config/config';
-import { CommandModule } from 'nestjs-command';
 import { UsersModule } from 'src/entity-modules/users/users.module';
 import { EmployeesModule } from 'src/entity-modules/employees/employees.module';
 import { AuthModule } from 'src/utility-modules/auth/auth.module';
