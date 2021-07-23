@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import faker from 'faker';
+import * as faker from 'faker';
 import { Model } from 'mongoose';
 import { initAdmin } from 'src/config/config';
 import {
@@ -27,12 +27,17 @@ export class SeederService {
     private readonly employeeModel: Model<EmployeeDocument>,
   ) {}
 
-  seed()
-  {
-
+  async seed() {
+    await this._addAdmin();
+    await this._addEmployerAndEmployees()
   }
 
-  private async _seedEmployerAndEmployees() {
+  async clear()
+  {
+    await this._deleteEmployerAndEmployees()
+  }
+
+  private async _addEmployerAndEmployees() {
     let employers = await Promise.all(
       range(SeederService._numEmployers).map((i) => this._randomEmployer(i)),
     );
@@ -57,7 +62,6 @@ export class SeederService {
       } employees created`,
     );
     process.stdout.write('\ndone !\n');
-    process.exit(0);
   }
 
   private async _deleteEmployerAndEmployees() {
@@ -66,7 +70,6 @@ export class SeederService {
     process.stdout.write(
       `${this.userModel.collection.name} and ${this.employeeModel.collection.name} collections deleted\n`,
     );
-    process.exit(0);
   }
 
   private async _addAdmin() {

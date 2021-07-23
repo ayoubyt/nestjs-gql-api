@@ -23,7 +23,7 @@ import { SeederModule } from './utility-modules/seeder/seeder.module';
     UsersModule,
     EmployeesModule,
     AuthModule,
-    // SeederModule,
+    SeederModule,
   ],
   controllers: [AppController],
 })
