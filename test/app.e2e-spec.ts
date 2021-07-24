@@ -24,7 +24,13 @@ describe('AppController (e2e)', () => {
     await app.init();
   });
 
-  it('test test', () => {
-    expect(2 * 2).toBe(4);
+  it('should get the cats array', () => {
+    return request(app.getHttpServer())
+      .post("/graphql")
+      .send({ query: '{test}' })
+      .expect(200)
+      .expect((res) => {
+        expect(res.body.data.test).toEqual("done");
+      });
   });
 });

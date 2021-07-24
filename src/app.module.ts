@@ -6,14 +6,14 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { UsersModule } from './entity-modules/users/users.module';
-import { gqlConf } from './config/config';
+import { env, gqlConf } from './config/config';
 import { AuthModule } from './utility-modules/auth/auth.module';
 import { EmployeesModule } from './entity-modules/employees/employees.module';
 import { SeederModule } from './utility-modules/seeder/seeder.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({ validationSchema: env.validationSchema }),
     MongooseModule.forRoot(process.env.MONGO_CONNECTION_STRING, {
       useCreateIndex: true,
     }),
