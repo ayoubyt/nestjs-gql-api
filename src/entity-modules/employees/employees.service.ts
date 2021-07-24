@@ -11,7 +11,6 @@ import * as mongoose from 'mongoose';
 import { PaginationInput } from 'src/utils/gql';
 import { UserDocument, UserRole } from '../users/entities/user.entity';
 
-const { ObjectId } = mongoose.Types;
 
 @Injectable()
 export class EmployeesService {
@@ -55,7 +54,7 @@ export class EmployeesService {
 
   async createOne(data: CreateEmployeeInput, employerId: string) {
     let employee = new this.employeeModel(data);
-    employee.employerId = new ObjectId(employerId);
+    employee.employerId = mongoose.Types.ObjectId(employerId);
     return await employee.save();
   }
 

@@ -1,4 +1,4 @@
-import { UseGuards } from '@nestjs/common';
+import { BadRequestException, UseFilters, UseGuards } from '@nestjs/common';
 import {
   Args,
   Mutation,
@@ -7,10 +7,11 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
+import { MongoError } from 'mongodb';
 import { JwtAuthGuard } from 'src/utility-modules/auth/auth.guards';
 import { CurrentUser } from 'src/utility-modules/auth/auth.helpers';
 import { PaginationArgs } from 'src/utils/gql';
-import { CheckObjectId } from 'src/utils/mogo';
+import { CheckObjectId, MongoExceptionFilter } from 'src/utils/mogo';
 import { User, UserDocument } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
 import { QueryEmployeesArgs } from './dto/employee.args';
@@ -53,6 +54,7 @@ export class EmployeesResolver {
   }
 
   @Mutation(() => Employee)
+  @UseFilters(MongoExceptionFilter)
   createEmployee(
     @Args('createEmployeeInput') data: CreateEmployeeInput,
     @CurrentUser() user: UserDocument,

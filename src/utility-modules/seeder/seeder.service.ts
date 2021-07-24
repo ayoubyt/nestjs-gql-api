@@ -29,14 +29,14 @@ export class SeederService {
 
   async seed() {
     await this.addAdmin();
-    await this._addEmployerAndEmployees();
+    await this.addEmployerAndEmployees();
   }
 
   async clear() {
     await this._deleteEmployerAndEmployees();
   }
 
-  private async _addEmployerAndEmployees() {
+  async addEmployerAndEmployees() {
     let employers = await Promise.all(
       range(SeederService._numEmployers).map((i) => this._randomEmployer(i)),
     );
