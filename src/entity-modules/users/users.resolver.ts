@@ -3,13 +3,12 @@ import {
   Query,
   Mutation,
   Args,
-  Int,
   ResolveField,
   Parent,
 } from '@nestjs/graphql';
 import { UsersService } from './users.service';
 import { User, UserDocument, UserRole } from './entities/user.entity';
-import { CreateUserInput, UpdateUserInput } from './dto/user.inputs';
+import { UpdateUserInput } from './dto/user.inputs';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/utility-modules/auth/auth.guards';
 import { Role, RolesGuard } from 'src/utils/authorization';

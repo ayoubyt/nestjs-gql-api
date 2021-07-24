@@ -12,11 +12,10 @@ import { AuthModule } from 'src/utility-modules/auth/auth.module';
 import { gql } from '../src/utils/utils';
 import { AppModule } from 'src/app.module';
 
-// owner.e2e.spec.ts
-describe('Owner test (e2e)', () => {
+describe('AppController (e2e)', () => {
   let app: INestApplication;
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
@@ -25,8 +24,7 @@ describe('Owner test (e2e)', () => {
     await app.init();
   });
 
-  afterAll(async () => {
-    await app.close();
+  it('test test', () => {
+    expect(2 * 2).toBe(4);
   });
-
 });
