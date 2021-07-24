@@ -66,12 +66,16 @@ export class EmployeesResolver {
   updateEmployee(
     @Args('employeeId') employeeId: string,
     @Args('updateEmployeeInput') data: UpdateEmployeeInput,
+    @CurrentUser() user: UserDocument
   ) {
-    return this.employeesService.updateOne(employeeId, data);
+    return this.employeesService.updateOne(employeeId, data, user);
   }
 
   @Mutation(() => Employee)
-  deleteEmployee(@Args('employeeId') employeeId: string) {
-    return this.employeesService.deleteOne(employeeId);
+  deleteEmployee(@Args('employeeId') employeeId: string,
+  @CurrentUser() user: UserDocument
+
+  ) {
+    return this.employeesService.deleteOne(employeeId, user);
   }
 }

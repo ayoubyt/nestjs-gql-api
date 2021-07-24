@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import {
@@ -10,7 +14,6 @@ import { Employee, EmployeeDocument } from './entities/employee.entity';
 import * as mongoose from 'mongoose';
 import { PaginationInput } from 'src/utils/gql';
 import { UserDocument, UserRole } from '../users/entities/user.entity';
-
 
 @Injectable()
 export class EmployeesService {
@@ -58,19 +61,29 @@ export class EmployeesService {
     return await employee.save();
   }
 
-  async updateOne(employeeId: string, data: UpdateEmployeeInput) {
+  async updateOne(
+    employeeId: string,
+    data: UpdateEmployeeInput,
+    user: UserDocument,
+  ) {
     let employee = await this.employeeModel.findById(employeeId);
     if (!employee)
       throw new NotFoundException(`employee with id '${employeeId}' not found`);
+    if (user.role !== 'ADMIN' && user.id !== employee.employerId.toString())
+      throw new ForbiddenException(
+        `only admin can update others employees data`,
+      );
     employee.set({ ...data });
 
     return await employee.save();
   }
 
-  async deleteOne(employeeId: string) {
+  async deleteOne(employeeId: string, user: UserDocument) {
     let employee = await this.employeeModel.findById(employeeId);
     if (!employee)
       throw new NotFoundException(`employee with id '${employeeId}' not found`);
+    if (user.role !== 'ADMIN' && user.id !== employee.employerId.toString())
+      throw new ForbiddenException(`only admin can delete others employees`);
     return await employee.remove();
   }
 }
