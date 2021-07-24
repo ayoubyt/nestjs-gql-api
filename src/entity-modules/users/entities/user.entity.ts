@@ -1,5 +1,6 @@
 import { ObjectType, Field, Int, ID, registerEnumType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { IsEmail, IsNotEmpty } from 'class-validator';
 import * as mongoose from 'mongoose';
 import { stringToEnumMiddleware } from 'src/utils/gql';
 import { enumToArray } from 'src/utils/utils';
@@ -17,7 +18,7 @@ registerEnumType(UserRole, {
 @Schema()
 export class User {
   @Field(() => ID)
-  id: mongoose.Schema.Types.ObjectId;
+  id: mongoose.Types.ObjectId;
 
   @Prop({ required: true })
   @Field()
@@ -29,6 +30,7 @@ export class User {
 
   @Prop({ unique: true, required: true })
   @Field()
+  @IsEmail()
   email: string;
 
   @Prop({ type: String, enum: enumToArray(UserRole), default: 'USER' })
@@ -36,6 +38,7 @@ export class User {
   role: UserRole;
 
   @Prop({ required: true })
+  @IsNotEmpty()
   password: string;
 
   @Prop([String])

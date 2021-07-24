@@ -13,6 +13,6 @@ import { UsersModule } from '../users/users.module';
     forwardRef(() => UsersModule)
   ],
   providers: [EmployeesResolver, EmployeesService],
-  exports: [MongooseModule]
+  exports: [MongooseModule, EmployeesService]
 })
 export class EmployeesModule {}

@@ -13,12 +13,6 @@ import { LoginUserInput } from './dto/login.input';
 export class AuthResolver {
   constructor(private readonly authService: AuthService) {}
 
-  @Query(() => String)
-  test()
-  {
-    return "done";
-  }
-
   @Mutation(() => AuthResult)
   register(@Args('createUserInput') data: CreateUserInput) {
     return this.authService.register(data);

@@ -1,7 +1,3 @@
-import { join } from 'path';
-import { CreateUserInput } from 'src/entity-modules/users/dto/user.inputs';
-import { User, UserRole } from 'src/entity-modules/users/entities/user.entity';
-
 export const gqlConf = {
   schemaFilePath: 'src/__generated__/schema.gql',
 };
@@ -16,7 +12,12 @@ export const auth = {
 export const initAdmin = {
   firstName: 'admin',
   lastName: 'admin',
-  role: UserRole.ADMIN,
+  role: 'ADMIN',
   email: 'admin@admin.com',
   password: '123456789',
+};
+
+export const pagination = {
+  defaultPageLimit: 10,
+  defaultPAgeOffset: 0,
 };

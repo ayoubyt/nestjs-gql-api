@@ -9,7 +9,8 @@ async function bootstrap() {
     const program = new Command();
     program
       .description('a script for seeding the database')
-      .option('-c|--clear', 'clear users and employees collections');
+      .option('-c|--clear', 'clear users and employees collections')
+      .option('-a|--admin', 'add only the init admin');
 
     program.parse(process.argv);
 
@@ -17,6 +18,7 @@ async function bootstrap() {
     const seeder = appContext.get(SeederService);
 
     if (options.clear) await seeder.clear();
+    else if (options.admin) await seeder.addAdmin();
     else await seeder.seed();
     process.exit(0);
   });

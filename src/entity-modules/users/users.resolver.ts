@@ -1,4 +1,12 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Args,
+  Int,
+  ResolveField,
+  Parent,
+} from '@nestjs/graphql';
 import { UsersService } from './users.service';
 import { User, UserDocument, UserRole } from './entities/user.entity';
 import { CreateUserInput, UpdateUserInput } from './dto/user.inputs';
@@ -8,11 +16,18 @@ import { Role, RolesGuard } from 'src/utils/authorization';
 import { CurrentUser } from 'src/utility-modules/auth/auth.helpers';
 import { PaginationArgs } from 'src/utils/gql';
 import { CheckObjectId } from 'src/utils/mogo';
+import { Employee } from '../employees/entities/employee.entity';
+import { EmployeesService } from '../employees/employees.service';
+import { QueryEmployeesArgs } from '../employees/dto/employee.args';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Resolver(() => User)
 export class UsersResolver {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly employeesService: EmployeesService,
+  ) {}
+
   @Query(() => User, {
     description: 'returns user (request sender) own personal data',
   })
@@ -34,6 +49,18 @@ export class UsersResolver {
     paginationArgs: PaginationArgs,
   ) {
     return this.usersService.findAll(paginationArgs.paginationInput);
+  }
+
+  @ResolveField(() => [Employee])
+  employees(
+    @Args() data: QueryEmployeesArgs,
+    @Parent()
+    user: UserDocument,
+  ) {
+    return this.employeesService.findAll(user, data.paginationInput, {
+      ...data.matchInput,
+      employerId: user.id,
+    });
   }
 
   @Role(UserRole.ADMIN)

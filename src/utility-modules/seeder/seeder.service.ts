@@ -28,13 +28,12 @@ export class SeederService {
   ) {}
 
   async seed() {
-    await this._addAdmin();
-    await this._addEmployerAndEmployees()
+    await this.addAdmin();
+    await this._addEmployerAndEmployees();
   }
 
-  async clear()
-  {
-    await this._deleteEmployerAndEmployees()
+  async clear() {
+    await this._deleteEmployerAndEmployees();
   }
 
   private async _addEmployerAndEmployees() {
@@ -72,7 +71,7 @@ export class SeederService {
     );
   }
 
-  private async _addAdmin() {
+  async addAdmin() {
     let password = await hashText(initAdmin.password);
     let admin = new this.userModel({ ...initAdmin, password });
     let data = await admin.save();

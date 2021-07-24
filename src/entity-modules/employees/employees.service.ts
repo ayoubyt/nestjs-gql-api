@@ -11,7 +11,7 @@ import * as mongoose from 'mongoose';
 import { PaginationInput } from 'src/utils/gql';
 import { UserDocument, UserRole } from '../users/entities/user.entity';
 
-const { ObjectId } = mongoose.Schema.Types;
+const { ObjectId } = mongoose.Types;
 
 @Injectable()
 export class EmployeesService {

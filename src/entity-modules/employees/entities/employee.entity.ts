@@ -8,7 +8,7 @@ import { User } from "../../users/entities/user.entity";
 @ObjectType()
 export class Employee {
   @Field(() => ID)
-  id: mongoose.Schema.Types.ObjectId;
+  id: mongoose.Types.ObjectId;
 
   @Prop({ required: true })
   @Field()
@@ -27,7 +27,7 @@ export class Employee {
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: User.name })
   @Field(() => String)
-  employerId: mongoose.Schema.Types.ObjectId;
+  employerId: mongoose.Types.ObjectId;
 }
 
 export type EmployeeDocument = Employee & mongoose.Document;
