@@ -4,7 +4,6 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { MongooseModule } from '@nestjs/mongoose';
-import { AppController } from './app.controller';
 import { UsersModule } from './entity-modules/users/users.module';
 import { env, gqlConf } from './config/config';
 import { AuthModule } from './utility-modules/auth/auth.module';
@@ -25,6 +24,5 @@ import { SeederModule } from './utility-modules/seeder/seeder.module';
     AuthModule,
     SeederModule,
   ],
-  controllers: [AppController],
 })
 export class AppModule {}
