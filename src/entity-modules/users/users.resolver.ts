@@ -8,7 +8,7 @@ import {
 } from '@nestjs/graphql';
 import { UsersService } from './users.service';
 import { User, UserDocument, UserRole } from './entities/user.entity';
-import { UpdateUserInput } from './dto/user.inputs';
+import { UpdateUserInput, UpdateUserProfileInput } from './dto/user.inputs';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/utility-modules/auth/auth.guards';
 import { Role, RolesGuard } from 'src/utils/authorization';
@@ -18,6 +18,7 @@ import { CheckObjectId } from 'src/utils/mogo';
 import { Employee } from '../employees/entities/employee.entity';
 import { EmployeesService } from '../employees/employees.service';
 import { QueryEmployeesArgs } from '../employees/dto/employee.args';
+import { QueryUsersArgs } from './dto/user.args';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Resolver(() => User)
@@ -43,11 +44,8 @@ export class UsersResolver {
   @Query(() => [User], {
     description: 'only admin user can read data about other users',
   })
-  users(
-    @Args()
-    paginationArgs: PaginationArgs,
-  ) {
-    return this.usersService.findAll(paginationArgs.paginationInput);
+  users(@Args() data: QueryUsersArgs) {
+    return this.usersService.findAll(data.paginationInput, data.matchInput);
   }
 
   @ResolveField(() => [Employee])
@@ -92,7 +90,7 @@ export class UsersResolver {
   })
   updateProfile(
     @CurrentUser() user: UserDocument,
-    @Args('uspdateUserInput') data: UpdateUserInput,
+    @Args('updateProfileInput') data: UpdateUserProfileInput,
   ) {
     return this.usersService.updateOne(user.id, data, user);
   }

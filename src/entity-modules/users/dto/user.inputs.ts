@@ -1,5 +1,5 @@
 import { InputType, Int, Field, PartialType, OmitType } from '@nestjs/graphql';
-import { User } from '../entities/user.entity';
+import { User, UserRole } from '../entities/user.entity';
 
 @InputType()
 export class CreateUserInput extends OmitType(
@@ -12,8 +12,18 @@ export class CreateUserInput extends OmitType(
 }
 
 @InputType()
-export class UpdateUserInput extends PartialType(
+export class UpdateUserProfileInput extends PartialType(
   OmitType(CreateUserInput, ['password']),
 ) {
 
 }
+@InputType()
+export class UpdateUserInput extends UpdateUserProfileInput {
+  @Field(() => UserRole)
+  role: UserRole;
+}
+
+@InputType()
+export class MatchUsersInput extends PartialType(
+  OmitType(User, ['id', "accessTokens", "password"], InputType),
+) {}

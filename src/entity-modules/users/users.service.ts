@@ -10,9 +10,13 @@ import {
   Employee,
   EmployeeDocument,
 } from '../employees/entities/employee.entity';
-import { CreateUserInput, UpdateUserInput } from './dto/user.inputs';
+import {
+  CreateUserInput,
+  MatchUsersInput,
+  UpdateUserProfileInput,
+} from './dto/user.inputs';
 import { User, UserDocument, UserRole } from './entities/user.entity';
-
+import * as mongoose from 'mongoose';
 @Injectable()
 export class UsersService {
   constructor(
@@ -22,14 +26,21 @@ export class UsersService {
     private readonly employeeModel: Model<EmployeeDocument>,
   ) {}
 
-  async findAll(pagination?: PaginationInput) {
+  async findAll(pagination?: PaginationInput, match?: MatchUsersInput) {
+    let q: mongoose.FilterQuery<EmployeeDocument> = {};
+
+    if (match)
+      Object.entries(match).forEach(([key, val]) => {
+        q[key] = { $regex: val, $options: 'i' };
+      });
+
     return await this.userModel
-      .find()
+      .find(q)
       .skip(pagination?.offset)
-      .limit(pagination?.limit)
+      .limit(pagination?.limit);
   }
 
-  async findOneById(id: string, check=true) {
+  async findOneById(id: string, check = true) {
     let user = await this.userModel.findById(id);
     if (!user && check)
       throw new NotFoundException(`user with id ${id} not found`);
@@ -48,7 +59,7 @@ export class UsersService {
 
   async updateOne(
     userId: string,
-    data: UpdateUserInput,
+    data: UpdateUserProfileInput,
     currentUser: UserDocument,
   ) {
     if (currentUser.id === userId) {
