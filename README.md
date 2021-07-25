@@ -52,9 +52,9 @@ to clear users (employers) and employees :
 ```bash
 ts-node scripts/seed.ts --clear
 ```
-tap
+tap the following command :
 ```bash
 ts-node scripts/seed.ts -h
 ```
-for more info.
+
 

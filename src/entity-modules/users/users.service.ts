@@ -27,7 +27,6 @@ export class UsersService {
       .find()
       .skip(pagination?.offset)
       .limit(pagination?.limit)
-      .lean();
   }
 
   async findOneById(id: string, check=true) {

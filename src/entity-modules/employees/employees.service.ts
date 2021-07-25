@@ -7,7 +7,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import {
   CreateEmployeeInput,
-  MatchEmployyesInput,
+  MatchEmployeesInput,
   UpdateEmployeeInput,
 } from './dto/employee.inputs';
 import { Employee, EmployeeDocument } from './entities/employee.entity';
@@ -32,13 +32,14 @@ export class EmployeesService {
   async findAll(
     user: UserDocument,
     pagination?: PaginationInput,
-    match?: MatchEmployyesInput,
+    match?: MatchEmployeesInput,
   ) {
     let q: mongoose.FilterQuery<EmployeeDocument> = {};
 
     if (match)
       Object.entries(match).forEach(([key, val]) => {
-        q[key] = { $regex: val, $options: 'i' };
+        if (key === 'employerId') q[key] = val;
+        else q[key] = { $regex: val, $options: 'i' };
       });
 
     /**

@@ -20,6 +20,6 @@ export class CreateEmployeeInput extends OmitType(
 export class UpdateEmployeeInput extends PartialType(CreateEmployeeInput) {}
 
 @InputType()
-export class MatchEmployyesInput extends PartialType(
+export class MatchEmployeesInput extends PartialType(
   OmitType(Employee, ['id'], InputType),
 ) {}
