@@ -33,7 +33,10 @@ example:
 
 ![.env file in vscode](.github/media/env.png)
 
+---------
+
 after running, visit **/graphql** path, you'll start a Graphql playground to start experimenting with the api.
+
 
 ![GraphQl playground](.github/media/gql.png)
 
