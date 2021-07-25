@@ -1,10 +1,11 @@
 # node challenge assignment
 
-ontwik node challenge assignment to be reiwed, it contains a Graphql API that represents an employees management system, where each employer can add, update and delete employees.
+ontwik node challenge assignment to be reviewed, it contains a Graphql API that represents an employees management system, where each employer can add, update and delete employees.
 
-its a Nest.js project with GraphQl API, connecting to a mongodb database.
+It's a Nest.js project with GraphQl API, connecting to a Mongodb database.
 
-## instalation
+## installation
+
 ```bash
 npm install
 ```
@@ -22,7 +23,7 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
-but before running the program, it must be a "*.env*" file in the root directory containg the following environment variables
+but before running the program, it must be a "*.env*" file in the root directory containing the following environment variables
 
     MONGO_CONNECTION_STRING
 
@@ -32,7 +33,7 @@ example:
 
 ![.env file in vscode](.github/media/env.png)
 
-after running, visit **/graphql** path, you'll start a graphql playground, to start experimenting with the api.
+after running, visit **/graphql** path, you'll start a Graphql playground to start experimenting with the api.
 
 ![GraphQl playground](.github/media/gql.png)
 
@@ -52,4 +53,5 @@ tap
 ```bash
 ts-node scripts/seed.ts -h
 ```
-for more info
+for more info.
+
