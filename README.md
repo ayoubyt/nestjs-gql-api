@@ -58,3 +58,18 @@ ts-node scripts/seed.ts -h
 ```
 
 
+## authentication
+
+the API uses a JWT authentication mechanism, so in every request (except in "register" and "login" mutations) a header "Authorization" must be set with JWT received as a bearer token with the following format:
+```
+"Authorization" : "Bearer <JWT>"
+```
+## usage examples
+
+![GraphQl playground register mutation](.github/media/ex1.png)
+
+![GraphQl playground login mutation](.github/media/ex2.png)
+
+![GraphQl playground employees query](.github/media/ex4.png)
+
+
