@@ -57,4 +57,4 @@ tap the following command :
 ts-node scripts/seed.ts -h
 ```
 
-
+> default password for "init admin" and any seeded user is "123456789"
