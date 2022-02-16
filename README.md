@@ -1,6 +1,6 @@
-# node challenge assignment
+# content
 
-ontwik node challenge assignment to be reviewed, it contains a Graphql API that represents an employees management system, where each employer can add, update and delete employees.
+this repo contains a Graphql API that represents an employees management system, where each employer can add, update and delete employees.
 
 It's a Nest.js project with GraphQl API, connecting to a Mongodb database.
 
